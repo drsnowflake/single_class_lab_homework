@@ -13,10 +13,9 @@ class TestThermostat < MiniTest::Test
     }
 
     @heating_info = {
+      current_temp: 16,
       requested_temp_home: 21,
-      requested_temp_out: 15,
-      frost_protection: 10,
-      is_boosted: false
+      requested_temp_out: 15
     }
 
     @user_status = {
@@ -35,43 +34,42 @@ class TestThermostat < MiniTest::Test
 
   def test_is_heating_user_home__is_heating
     heating_control = Thermostat.new(@data)
-    current_temp = 16
-    assert_equal(true, heating_control.is_heating(current_temp))
+    assert_equal(true, heating_control.is_heating)
   end
 
   def test_is_heating_user_home__is_not_heating
     heating_control = Thermostat.new(@data)
-    current_temp = 23
-    assert_equal(false, heating_control.is_heating(current_temp))
+    @heating_info[:current_temp] = 23
+    assert_equal(false, heating_control.is_heating)
   end
 
   def test_is_heating_user_not_home__is_heating
     @user_status[:home] = false
     heating_control = Thermostat.new(@data)
-    current_temp = 13
-    assert_equal(true, heating_control.is_heating(current_temp))
+    @heating_info[:current_temp] = 13
+    assert_equal(true, heating_control.is_heating)
   end
 
   def test_is_heating_user_not_home__is_not_heating
     @user_status[:home] = false
     heating_control = Thermostat.new(@data)
-    current_temp = 18
-    assert_equal(false, heating_control.is_heating(current_temp))
+    @heating_info[:current_temp] = 18
+    assert_equal(false, heating_control.is_heating)
   end
 
   def test_is_heating_user_heading_home__true
     @user_status[:home] = false
     @user_status[:within_range] = true
     heating_control = Thermostat.new(@data)
-    current_temp = 18
-    assert_equal(true, heating_control.is_heating(current_temp))
+    @heating_info[:current_temp] = 18
+    assert_equal(true, heating_control.is_heating)
   end
 
   def test_is_heating_user_heading_home__false
     @user_status[:home] = false
     heating_control = Thermostat.new(@data)
-    current_temp = 18
-    assert_equal(false, heating_control.is_heating(current_temp))
+    @heating_info[:current_temp] = 18
+    assert_equal(false, heating_control.is_heating)
   end
 
 end
